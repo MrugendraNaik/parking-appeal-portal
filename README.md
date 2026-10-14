@@ -56,3 +56,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md): `main` (released) ← `develop` (integra
 | `APP_TEST_SUPPORT` | `false` | Enables the test-data endpoint used by Selenium |
 | `APP_SIMULATE_FAILURE` | `false` | Makes `/actuator/health` report DOWN (rollback drill) |
 | `PORT` | `8080` | HTTP port |
+
