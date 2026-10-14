@@ -1,0 +1,26 @@
+# Build output
+target/
+*.class
+*.war
+*.jar
+!.mvn/wrapper/*.jar
+
+# Local runtime data (H2 database, uploaded evidence)
+data/
+*.mv.db
+*.trace.db
+
+# IDE / OS
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+.DS_Store
+Thumbs.db
+
+# Logs & secrets
+*.log
+.env
+ansible/*.retry
