@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments :: head('Reviewer login')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main class="wrap narrow">
+    <h1 class="page-title">Reviewer desk</h1>
+    <div class="alert alert-error" id="loginError" th:if="${loginError}" th:text="${loginError}"></div>
+    <form class="card form" th:action="@{/reviewer/login}" method="post">
+        <label>Reviewer access key
+            <input type="password" name="key" id="reviewerKey" autocomplete="current-password">
+        </label>
+        <button type="submit" class="btn btn-primary" id="loginBtn">Sign in</button>
+        <p class="muted small" th:if="${appEnv != 'production'}">Default key in non-production environments: <code>reviewer123</code> (set <code>REVIEWER_KEY</code> to change).</p>
+    </form>
+</main>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

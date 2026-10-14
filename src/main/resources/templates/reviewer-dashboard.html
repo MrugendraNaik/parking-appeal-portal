@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments :: head('Reviewer dashboard')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main class="wrap">
+    <div class="title-row">
+        <h1 class="page-title">Appeals queue</h1>
+        <form th:action="@{/reviewer/logout}" method="post"><button class="btn btn-ghost" id="logoutBtn">Sign out</button></form>
+    </div>
+
+    <section class="tiles">
+        <a class="tile" th:each="t : ${tiles}" th:href="@{/reviewer(status=${t.status})}"
+           th:classappend="${t.active} ? 'active'" th:id="'tile-' + ${t.status}">
+            <span class="tile-num" th:text="${t.count}">0</span>
+            <span class="tile-label" th:text="${t.status.label}">Submitted</span>
+        </a>
+        <a class="tile" th:href="@{/reviewer}" th:classappend="${filter == null} ? 'active'" id="tile-ALL">
+            <span class="tile-num" th:text="${#lists.size(appeals)}" th:if="${filter == null}">0</span>
+            <span class="tile-num" th:unless="${filter == null}">·</span>
+            <span class="tile-label">All</span>
+        </a>
+    </section>
+
+    <table class="table card" id="appealsTable">
+        <thead><tr><th>Reference</th><th>Ticket</th><th>Vehicle</th><th>Citizen</th><th>Filed</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        <tr th:each="a : ${appeals}" th:id="'row-' + ${a.appealRef}">
+            <td class="mono" th:text="${a.appealRef}"></td>
+            <td class="mono" th:text="${a.violation.ticketNumber}"></td>
+            <td class="mono" th:text="${a.vehicleNumber}"></td>
+            <td th:text="${a.ownerName}"></td>
+            <td th:text="${#temporals.format(a.submittedAt, 'dd MMM, HH:mm')}"></td>
+            <td><span th:replace="~{fragments :: statusPill(${a.status})}"></span></td>
+            <td><a class="link" th:href="@{/reviewer/appeals/{ref}(ref=${a.appealRef})}" th:id="'open-' + ${a.appealRef}">Open →</a></td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(appeals)}"><td colspan="7" class="muted" id="emptyQueue">No appeals here.</td></tr>
+        </tbody>
+    </table>
+</main>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>
