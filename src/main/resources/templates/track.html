@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments :: head('Track appeal')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main class="wrap narrow">
+    <h1 class="page-title">Track your appeal</h1>
+    <form class="card form inline-form" th:action="@{/track}" method="get" id="trackForm">
+        <label>Appeal reference
+            <input type="text" name="ref" id="ref" th:value="${ref}" placeholder="APL-20261015-ABCD" class="mono">
+        </label>
+        <label>Email used when filing
+            <input type="email" name="email" id="email" th:value="${email}" placeholder="you@example.com">
+        </label>
+        <button type="submit" class="btn btn-primary" id="trackBtn">Check status</button>
+    </form>
+
+    <div class="alert alert-error" id="trackError" th:if="${trackError}" th:text="${trackError}">Not found</div>
+
+    <section class="card result" th:if="${appeal}" id="trackResult">
+        <div class="result-head">
+            <div>
+                <p class="eyebrow">Appeal</p>
+                <h2 class="mono" th:text="${appeal.appealRef}">APL-…</h2>
+            </div>
+            <span id="appealStatus"><span th:replace="~{fragments :: statusPill(${appeal.status})}"></span></span>
+        </div>
+        <ol class="timeline">
+            <li class="done">Submitted <small th:text="${#temporals.format(appeal.submittedAt, 'dd MMM yyyy, HH:mm')}"></small></li>
+            <li th:classappend="${!appeal.status.submitted} ? 'done'">Under review</li>
+            <li th:classappend="${appeal.status.isFinal()} ? 'done'"
+                th:text="${appeal.status.isFinal()} ? ('Decision: ' + ${appeal.status.label}) : 'Decision pending'">Decision</li>
+        </ol>
+        <dl class="kv">
+            <dt>Ticket</dt><dd class="mono" th:text="${appeal.violation.ticketNumber}"></dd>
+            <dt>Violation</dt><dd th:text="${appeal.violation.violationType} + ', ' + ${appeal.violation.location}"></dd>
+            <dt>Fine</dt><dd th:text="'₹' + ${appeal.violation.fineAmount}"></dd>
+            <th:block th:if="${appeal.reviewerRemarks}">
+                <dt>Reviewer remarks</dt><dd id="reviewerRemarks" th:text="${appeal.reviewerRemarks}"></dd>
+            </th:block>
+        </dl>
+    </section>
+</main>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>
