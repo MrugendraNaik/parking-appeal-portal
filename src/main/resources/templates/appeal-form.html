@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments :: head('File an appeal')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main class="wrap narrow">
+    <h1 class="page-title">File an appeal</h1>
+    <p class="muted">All fields are required. Evidence must be a PDF, JPG or PNG under 2&nbsp;MB.</p>
+
+    <div class="alert alert-error" id="formErrors" th:if="${errors != null}">
+        Please correct the <span th:text="${#maps.size(errors)}">2</span> highlighted field(s).
+    </div>
+
+    <form class="card form" th:action="@{/appeals}" th:object="${appealForm}" method="post"
+          enctype="multipart/form-data" id="appealFormEl" novalidate>
+        <fieldset>
+            <legend>Ticket</legend>
+            <div class="grid-2">
+                <label>Ticket number
+                    <input type="text" th:field="*{ticketNumber}" placeholder="PV-100001" maxlength="9" class="mono">
+                    <p th:replace="~{fragments :: fieldError('ticketNumber')}"></p>
+                </label>
+                <label>Vehicle number
+                    <input type="text" th:field="*{vehicleNumber}" placeholder="MH01AB1234" maxlength="13" class="mono">
+                    <p th:replace="~{fragments :: fieldError('vehicleNumber')}"></p>
+                </label>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Your details</legend>
+            <label>Full name
+                <input type="text" th:field="*{ownerName}" placeholder="As on the RC book">
+                <p th:replace="~{fragments :: fieldError('ownerName')}"></p>
+            </label>
+            <div class="grid-2">
+                <label>Email
+                    <input type="email" th:field="*{email}" placeholder="you@example.com">
+                    <p th:replace="~{fragments :: fieldError('email')}"></p>
+                </label>
+                <label>Mobile number
+                    <input type="tel" th:field="*{phone}" placeholder="9876543210" maxlength="10">
+                    <p th:replace="~{fragments :: fieldError('phone')}"></p>
+                </label>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Your appeal</legend>
+            <label>Why should this ticket be cancelled?
+                <textarea th:field="*{reason}" rows="5" maxlength="1000"
+                          placeholder="e.g. The no-parking sign was hidden behind a tree; photo attached."></textarea>
+                <p th:replace="~{fragments :: fieldError('reason')}"></p>
+            </label>
+            <label>Evidence (PDF / JPG / PNG, max 2 MB)
+                <input type="file" name="evidence" id="evidence" accept=".pdf,.jpg,.jpeg,.png">
+                <p th:replace="~{fragments :: fieldError('evidence')}"></p>
+            </label>
+        </fieldset>
+        <button type="submit" class="btn btn-primary" id="submitAppeal">Submit appeal</button>
+    </form>
+</main>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>
