@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title} + ' · Parking Appeal Portal'">Parking Appeal Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header th:fragment="header" class="site-header">
+    <div class="wrap header-row">
+        <a th:href="@{/}" class="brand" id="homeLink">
+            <span class="brand-mark">P</span>
+            <span class="brand-text">Parking Appeal<br><small>Violation Appeal Portal</small></span>
+        </a>
+        <nav class="nav">
+            <a th:href="@{/appeals/new}" id="navNewAppeal">File an appeal</a>
+            <a th:href="@{/track}" id="navTrack">Track status</a>
+            <a th:href="@{/reviewer}" id="navReviewer">Reviewer desk</a>
+        </nav>
+    </div>
+</header>
+
+<p th:fragment="fieldError(name)" class="field-error" th:id="'error-' + ${name}"
+   th:if="${errors != null and errors['__${name}__'] != null}" th:text="${errors['__${name}__']}">error</p>
+
+<span th:fragment="statusPill(status)" class="pill" th:classappend="'pill-' + ${status.css}"
+      th:text="${status.label}">Submitted</span>
+
+<footer th:fragment="footer" class="site-footer">
+    <div class="wrap footer-row">
+        <span>Parking Violation Appeal Portal · DevOps mini-project</span>
+        <span class="env-badge" id="envBadge">
+            env <b th:text="${appEnv}">dev</b> · v<span th:text="${appVersion}">1.0.0</span> · build <span th:text="${appBuild}">local</span>
+        </span>
+    </div>
+</footer>
+</body>
+</html>

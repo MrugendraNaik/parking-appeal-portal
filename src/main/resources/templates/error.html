@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments :: head('Error')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main class="wrap narrow">
+    <div class="stub">
+        <p class="eyebrow" th:text="'Error ' + ${status}">Error</p>
+        <h1 th:text="${status == 404} ? 'We could not find that page' : 'Something went wrong'">Something went wrong</h1>
+        <p class="muted" th:text="${message}"></p>
+        <a class="btn btn-primary" th:href="@{/}">Back to home</a>
+    </div>
+</main>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

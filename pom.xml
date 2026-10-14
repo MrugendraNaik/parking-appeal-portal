@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.5</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.vit</groupId>
+    <artifactId>parking-appeal</artifactId>
+    <version>1.0.0</version>
+    <!-- WAR so the same artefact deploys to Tomcat 10.1 AND runs with "java -jar" (Docker) -->
+    <packaging>war</packaging>
+    <name>Parking Violation Appeal Portal</name>
+    <description>DevOps mini-project: automated parking violation appeal portal</description>
+
+    <properties>
+        <java.version>17</java.version>
+        <selenium.version>4.25.0</selenium.version>
+        <!-- Selenium / integration-test settings (override with -D on the command line) -->
+        <app.it.port>8095</app.it.port>
+        <app.baseUrl>http://localhost:${app.it.port}</app.baseUrl>
+        <browser>chrome</browser>
+        <headless>true</headless>
+        <skipAppStart>false</skipAppStart>
+        <skipUnitTests>false</skipUnitTests>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- provided: external Tomcat supplies it; still used by "java -jar app.war" -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Tests -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>parking-appeal</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- Unit tests only: *Test.java. Selenium tests are *IT.java (failsafe) -->
+                    <skipTests>${skipUnitTests}</skipTests>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- mvn verify -Pselenium : starts the app on ${app.it.port}, runs Selenium ITs, stops the app -->
+        <profile>
+            <id>selenium</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>start-app-for-it</id>
+                                <phase>pre-integration-test</phase>
+                                <goals><goal>start</goal></goals>
+                                <configuration>
+                                    <skip>${skipAppStart}</skip>
+                                    <arguments>
+                                        <argument>--server.port=${app.it.port}</argument>
+                                        <argument>--app.env=test</argument>
+                                        <argument>--app.test-support=true</argument>
+                                        <argument>--app.data-dir=${project.build.directory}/it-data</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>stop-app-after-it</id>
+                                <phase>post-integration-test</phase>
+                                <goals><goal>stop</goal></goals>
+                                <configuration>
+                                    <skip>${skipAppStart}</skip>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <baseUrl>${app.baseUrl}</baseUrl>
+                                <browser>${browser}</browser>
+                                <headless>${headless}</headless>
+                                <screenshotDir>${project.build.directory}/screenshots</screenshotDir>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
