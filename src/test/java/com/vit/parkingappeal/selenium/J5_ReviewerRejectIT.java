@@ -20,6 +20,7 @@ class J5_ReviewerRejectIT extends BaseSeleniumIT {
 
         type("remarks", TestJourneyData.REJECTION_REMARKS);
         byId("rejectBtn").click();
+        assertThat(byId("flashSuccess").getText()).contains("rejected");
         assertThat(byId("detailStatus").getText()).isEqualToIgnoringCase("Rejected");
         assertThat(driver.findElements(org.openqa.selenium.By.id("decisionForm"))).isEmpty();
     }
