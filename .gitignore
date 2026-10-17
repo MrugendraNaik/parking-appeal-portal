@@ -24,3 +24,4 @@ Thumbs.db
 *.log
 .env
 ansible/*.retry
+*.deb
