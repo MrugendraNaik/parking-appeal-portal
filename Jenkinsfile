@@ -27,7 +27,7 @@ pipeline {
                description: 'Environment setting passed to the app (shown in the page footer)')
         choice(name: 'DEPLOY_TARGET', choices: ['tomcat', 'docker', 'both', 'none'],
                description: 'Where to deploy after tests pass')
-        booleanParam(name: 'RUN_SELENIUM', defaultValue: false,
+        booleanParam(name: 'RUN_SELENIUM', defaultValue: true,
                      description: 'Run the Selenium UI suite (failed tests stop deployment)')
         string(name: 'TOMCAT_HOME', defaultValue: '/opt/tomcat', description: 'Tomcat 10.1 install folder')
         string(name: 'TOMCAT_URL', defaultValue: 'http://localhost:8081', description: 'Tomcat base URL')
