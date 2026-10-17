@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments :: head('Review appeal')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main class="wrap narrow">
+    <a class="link" th:href="@{/reviewer}" id="backToQueue">← Back to queue</a>
+    <div class="alert alert-success" id="flashSuccess" th:if="${flashSuccess}" th:text="${flashSuccess}"></div>
+    <div class="alert alert-error" id="flashError" th:if="${flashError}" th:text="${flashError}"></div>
+
+    <section class="card">
+        <div class="result-head">
+            <div>
+                <p class="eyebrow">Appeal</p>
+                <h1 class="mono" id="detailRef" th:text="${appeal.appealRef}">APL-…</h1>
+            </div>
+            <span id="detailStatus"><span th:replace="~{fragments :: statusPill(${appeal.status})}"></span></span>
+        </div>
+        <div class="grid-2">
+            <dl class="kv">
+                <dt>Ticket</dt><dd class="mono" th:text="${appeal.violation.ticketNumber}"></dd>
+                <dt>Violation</dt><dd th:text="${appeal.violation.violationType}"></dd>
+                <dt>Where</dt><dd th:text="${appeal.violation.location}"></dd>
+                <dt>When</dt><dd th:text="${#temporals.format(appeal.violation.violationDate, 'dd MMM yyyy')}"></dd>
+                <dt>Fine</dt><dd th:text="'₹' + ${appeal.violation.fineAmount}"></dd>
+            </dl>
+            <dl class="kv">
+                <dt>Citizen</dt><dd th:text="${appeal.ownerName}"></dd>
+                <dt>Vehicle</dt><dd class="mono" th:text="${appeal.vehicleNumber}"></dd>
+                <dt>Email</dt><dd th:text="${appeal.email}"></dd>
+                <dt>Mobile</dt><dd th:text="${appeal.phone}"></dd>
+                <dt>Evidence</dt><dd><a class="link" target="_blank" id="evidenceLink"
+                    th:href="@{/reviewer/appeals/{ref}/evidence(ref=${appeal.appealRef})}"
+                    th:text="${appeal.evidenceFileName}">file.pdf</a></dd>
+            </dl>
+        </div>
+        <h3>Citizen's reason</h3>
+        <blockquote class="reason" id="appealReason" th:text="${appeal.reason}"></blockquote>
+        <p th:if="${appeal.reviewerRemarks}"><b>Reviewer remarks:</b> <span id="savedRemarks" th:text="${appeal.reviewerRemarks}"></span></p>
+    </section>
+
+    <form class="card form" th:unless="${appeal.status.isFinal()}" id="decisionForm"
+          th:action="@{/reviewer/appeals/{ref}/decision(ref=${appeal.appealRef})}" method="post">
+        <label>Remarks to the citizen (required when rejecting)
+            <textarea name="remarks" id="remarks" rows="3" th:text="${remarks}"></textarea>
+        </label>
+        <div class="btn-row">
+            <button type="submit" name="decision" value="REJECT" class="btn btn-approve" id="approveBtn">Approve &amp; cancel fine</button>
+            <button type="submit" name="decision" value="REJECT" class="btn btn-reject" id="rejectBtn">Reject appeal</button>
+        </div>
+    </form>
+</main>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{fragments :: head('Appeal submitted')}"></head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main class="wrap narrow">
+    <div class="stub" id="confirmation">
+        <p class="eyebrow">Appeal received</p>
+        <h1>Keep this reference</h1>
+        <p class="ref mono" id="appealRef" th:text="${appealRef}">APL-20261015-ABCD</p>
+        <dl class="kv">
+            <dt>Ticket</dt><dd class="mono" th:text="${ticketNumber}">PV-100001</dd>
+            <dt>Status</dt><dd><span class="pill pill-submitted" id="confirmStatus">Submitted</span></dd>
+            <dt>Updates for</dt><dd th:text="${appealEmail}">you@example.com</dd>
+        </dl>
+        <a class="btn btn-primary" id="trackThisAppeal"
+           th:href="@{/track(ref=${appealRef},email=${appealEmail})}">Track this appeal</a>
+    </div>
+</main>
+<footer th:replace="~{fragments :: footer}"></footer>
+</body>
+</html>
