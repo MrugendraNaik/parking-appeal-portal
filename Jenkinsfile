@@ -25,7 +25,7 @@ pipeline {
     parameters {
         choice(name: 'DEPLOY_ENV', choices: ['staging', 'production', 'dev'],
                description: 'Environment setting passed to the app (shown in the page footer)')
-        choice(name: 'DEPLOY_TARGET', choices: ['tomcat', 'docker', 'both', 'none'],
+        choice(name: 'DEPLOY_TARGET', choices: ['docker', 'tomcat', 'both', 'none'],
                description: 'Where to deploy after tests pass')
         booleanParam(name: 'RUN_SELENIUM', defaultValue: true,
                      description: 'Run the Selenium UI suite (failed tests stop deployment)')
