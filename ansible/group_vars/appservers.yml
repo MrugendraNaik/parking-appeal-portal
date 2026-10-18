@@ -1,0 +1,31 @@
+# ---- Configuration specification for the target node (Experiment 13) ----
+app_name: parking-appeal
+app_user: parkingapp            # service account that owns the app folders
+app_group: parkingapp
+app_home: /opt/parking-appeal   # root folder on the node
+app_container_uid: "1001"       # uid of 'appuser' inside the Docker image (needs write access to data/)
+
+app_port: 8088                  # host port -> container port 8080
+app_env: production
+reviewer_key: "change-me-in-production"
+
+# Image to deploy. Local registry for single-machine demo,
+# or "<your-dockerhub-user>/parking-appeal" when deploying to a separate VM.
+image_repo: "localhost:5000/parking-appeal"
+image_tag: latest
+
+# Experiment 14 failure drill: deploy with -e simulate_failure=true to make the
+# health check fail and trigger the automatic rollback.
+simulate_failure: false
+
+health_url: "http://localhost:{{ app_port }}/actuator/health"
+health_retries: 24
+health_delay: 5
+
+required_packages:
+  - docker.io
+  - python3-docker
+  - curl
+  - ca-certificates
+
+manage_firewall: false          # set true to open app_port with ufw
