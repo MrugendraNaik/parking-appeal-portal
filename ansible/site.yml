@@ -1,0 +1,4 @@
+# Full run: provision the node, then deploy the release.
+#   ansible-playbook site.yml -K -e image_tag=1.0.0
+- import_playbook: provision.yml
+- import_playbook: deploy.yml
